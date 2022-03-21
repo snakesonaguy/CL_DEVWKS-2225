@@ -1,19 +1,25 @@
+from tabnanny import verbose
 import requests
 import urllib3
 import json
 import pandas as pd
+from dotenv import load_dotenv, find_dotenv
+import os
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+load_dotenv(find_dotenv())
 
 # Global variables for the devNet sandbox instance of NSO
-NSO_HOST = 'https://sandbox-nso-1.cisco.com'
-USERNAME = 'developer'
-PASSWORD =  'Services4Ever'
+NSO_HOST = os.getenv('NSO_HOST')
+USERNAME = os.getenv('NSO_USERNAME')
+PASSWORD = os.getenv('NSO_PASSWORD')
 AUTH = (USERNAME, PASSWORD)
 VERIFY = False
 HEADERS = {'Content-type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
 DEVICES = []
 PLATFORM_DETAILS = {}
+
+print('{} {} {}'.format(NSO_HOST, USERNAME, PASSWORD))
 
 ## Verifies access to the RestConf API of NSO
 def get_verify_restconf():
@@ -81,10 +87,10 @@ def get_device_info():
 
 def main():
     pass
-    # get_verify_restconf()
-    get_device_groups()
-    print(DEVICES)
-    get_device_info()
+    get_verify_restconf()
+    # get_device_groups()
+    # print(DEVICES)
+    # get_device_info()
 
 
 if __name__ == '__main__':
