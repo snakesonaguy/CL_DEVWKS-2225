@@ -1,4 +1,3 @@
-from tabnanny import verbose
 import requests
 import urllib3
 import json
@@ -18,8 +17,6 @@ VERIFY = False
 HEADERS = {'Content-type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
 DEVICES = []
 PLATFORM_DETAILS = {}
-
-print('{} {} {}'.format(NSO_HOST, USERNAME, PASSWORD))
 
 ## Verifies access to the RestConf API of NSO
 def get_verify_restconf():
