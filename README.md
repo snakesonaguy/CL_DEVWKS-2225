@@ -55,8 +55,6 @@ vscode should open on your desktop and you should see a screen similar to this:
 
 ![text!](/images/open_code.png)
 
-Note: you will not have the .env file in your directory when you first clone it. No worries, we will be creating it. 
-
 Taking a look at the contents of the directory in the left plane we can see that we have several items:
 
 - images (a directory containing the images for the README.md)
