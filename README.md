@@ -24,3 +24,7 @@ The lab you will be interacting with today consists of the workstation, an NSO i
 You should currently be viewing this README.md file at: https://github.com/snakesonaguy/CL_DEVWKS-2225. We will be utilizing Git to clone this repository onto our workstations. Right-click anywhere on your desktop and select 'Open in terminal'. This should open a terminal window in the Desktop directory:
 
 ![text!](/images/open_term.png)
+
+In the terminal box enter the command: 
+
+`git clone https://github.com/snakesonaguy/CL_DEVWKS-2225`
