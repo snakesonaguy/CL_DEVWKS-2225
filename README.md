@@ -29,10 +29,24 @@ In the terminal box enter the command:
 
 `git clone https://github.com/snakesonaguy/CL_DEVWKS-2225`
 
-You should now have **CL_DEVWKS-2225** directory on your desktop. You can now move into the lab directory. From the open terminal type:
+You should now have **CL_DEVWKS-2225** directory on your desktop. 
+
+---
+
+## Opening the code in your Integrated Development Environment:
+
+You can now move into the lab directory. From the open terminal type:
 
 `cd CL_DEVWKS-2225`
 
 You can see the contents of the directory by issuing the `ls` command. 
 
 ![text!](/images/ls.png)
+
+Note: there are some additional hidden files that we cannot see with `ls`. 
+
+Now that you are in the lab directory we can open our IDE (vscode). To do this issue the command (from the open terminal):
+
+`code .`
+
+Note: `code` is the command to open vscode and `.` is a refrence to the present working directory. 
