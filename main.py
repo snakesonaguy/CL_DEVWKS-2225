@@ -28,7 +28,8 @@ def get_verify_restconf():
     r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=VERIFY)
     if r.status_code == 200:
         ret = (json.loads(r.text))
-        print(json.dumps(ret, indent=4))
+        print(type(ret))
+        # print(json.dumps(ret, indent=4))
     else:
         print('Error Code: {}'.format(r.status_code))
 
@@ -85,11 +86,11 @@ def get_device_info():
     df.to_excel('test.xlsx')
 
     print(df)
-    
+
 
 def main():
     pass
-    # get_verify_restconf()
+    get_verify_restconf()
     # get_device_groups()
     # print(DEVICES)
     # get_device_info()

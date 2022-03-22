@@ -184,3 +184,51 @@ Below the global variables you will find all of the function definitions for our
     if __name__ == '__main__':
         main()
 ```
+
+The `main()` function is the driver for your program. Any function calls that we execute will be called from here. This is also the simplest of the functions so we can use it to explain the layout of a function. First the function is defined with the `def` keyword followed the name of the function (in this case `main`) and `()`. The `()` will contain any parameters (arguments) that the specific function is expecting. 
+
+So a simple function might looks something like this:
+
+```
+    def double(num):
+        return num * 2
+```
+
+In the above function the argument `num` is passed to the function `double`. The function returns `num * 2`. You will notice that none of our functions take any arguments or return anything. This is because we are using global variables (we don't need to pass variables around since each function has direct access to them (global scope).
+
+The `if __name__ == '__main__':` statement basically allows our code to either be run as a standalone program or imported into a different program. This is a good practice. 
+
+For now let's run our program for the first time. With the **main.py** file open push the play button in the top right corner of vscode. 
+
+You'll notice that the program does nothing. This is because the only statement within `main`, that is not commented out, is `pass`. `pass` is a NULL statement meaing that it does nothing. Let's move on to something more relevant. 
+
+--- 
+
+## Calling Network Services Orchestrator
+
+### Verifying Access to the NSO Instance
+
+One of the first things we should do is to verify that we have access to our NSO instance. We need to ensure that our NSO instance is reachable via the RESTConf API, and that our user has the ability to make calls. To this end we have a function called `get_verify_restconf()`. Let's take a look at this function: 
+
+```
+    ## Verifies access to the RestConf API of NSO
+    def get_verify_restconf():
+        path = '{}/restconf'.format(NSO_HOST)
+        r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=VERIFY)
+        if r.status_code == 200:
+            ret = (json.loads(r.text))
+            print(json.dumps(ret, indent=4))
+        else:
+            print('Error Code: {}'.format(r.status_code))
+
+```
+First we see the function definition `def get_verify_restconf()`. For our functions the first part of the name is what type of HTTP verb we are using. All of our calls to NSO will be GET calls, but you can also make POST, PATCH, PUT, DELETE calls. The second part of the name provides information about the intent of the function. So  `get_verify_restconf` means that we are making an HTTP GET in order to verify our access to the RESTConf API. 
+
+The next line is a variable named `path`. 
+    
+```
+    path = '{}/restconf'.format(NSO_HOST)
+```
+
+This variable is assigned to `'{}/restconf'.format(NSO_HOST)`. So what is this variable? It is a formated string. This is formatted by taking the variable stored in `NSO_HOST` and placing into the string at the location of the `{}`. So what stored in `path` is `https://path_to_nso.com/restconf`. 
+
