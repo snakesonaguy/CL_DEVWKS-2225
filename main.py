@@ -1,3 +1,4 @@
+# Imported Packages
 import requests
 import urllib3
 import json
@@ -8,10 +9,12 @@ import os
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv(find_dotenv())
 
-# Global variables for the devNet sandbox instance of NSO
+# Global variables accessed via python-dotenv
 NSO_HOST = os.getenv('NSO_HOST')
 USERNAME = os.getenv('NSO_USERNAME')
 PASSWORD = os.getenv('NSO_PASSWORD')
+
+# Additional global variables
 AUTH = (USERNAME, PASSWORD)
 VERIFY = False
 HEADERS = {'Content-type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
