@@ -134,3 +134,40 @@ Here is what those statements do:
 
 - `urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)` - since we are using self-signed certificates on NSO the request library will complain about an insecure connection. This line disables that warning. 
 - `load_dotenv(find_dotenv())` - consists of two function calls. The outer call `load_dotenv()` takes as an argument the location of a **.env** file (remember we made that earlier) and makes the variables in that file available to the program. Conveniently, `find_dotenv()` will locate the **.env** file by looking in the present working directory.  
+
+### Global Varibles Accessed By python-dotenv()
+
+The next block of code is labeled `Global variables accessed via python-dotenv`
+
+```
+    # Global variables accessed via python-dotenv
+    NSO_HOST = os.getenv('NSO_HOST')
+    USERNAME = os.getenv('NSO_USERNAME')
+    PASSWORD = os.getenv('NSO_PASSWORD')
+```
+
+These statements make the variables that we configured in our **.env** file into variables in our program. So why go through the trouble of using python-dotenv to access these specific variables? Many times we may want to share our code with others, but we do not want to share our usernames, passwords, or other information. By using python-dotenv we can share our code without exposing our secure information. Additionally, we place our **.env** in our **.gitignore** so that when we push this code to a Git repository it is not uploaded. 
+
+### Additional Global Variables
+
+Next you will find an additional block of global variables. 
+
+```
+    # Additional global variables
+    AUTH = (USERNAME, PASSWORD)
+    VERIFY = False
+    HEADERS = {'Content-type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
+    DEVICES = []
+    PLATFORM_DETAILS = {}
+```
+Here is what these variables are:
+
+- AUTH - a Python tuple that consists of the USERNAME and PASSWORD variables
+- VERIFY - a boolean set to `False`
+- HEADERS - a Python dictionary that consists of 2 key value pairs
+- DEVICES - an empty Python list 
+- PLATFORM_DETAILS - an empty Python dictionary
+
+When we explore the functions within the code we will see how these are used.
+
+Note: You'll notice that we refer to these as 'global' variables. That means that these variables have global scope i.e. they can be accessed and modified (if they are of a mutable type) from anywhere within the code. A convention in many programming languages is to use UPPERCASE for global variables. This makes them easily recognizable. 
