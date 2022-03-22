@@ -11,6 +11,8 @@ Welcome to Cisco Live! In this DevNet workshop we will be covering how to automa
 
 If you are taking this lab at CLUS 2022 you should be provided a workstation. This workstation has been configured with the correct Python packages, tools, and an IDE (vsCode) to perform the lab. If you are performing this lab on your own equipment please refer to the **SETUP.md** file. 
 
+In this lab we try not to make any assumptions about your level of experience with any of the various components (Linux, vscode, Python, etc). For this reason the instructions may seemed overly detailed. 
+
 Throughout the lab guide there will be images of Linux terminals. In some instances your machine name, or user name may not match what is in the image. As long as you are in the correct directory this should cause you no issues. 
 
 ## Lab Environment:
@@ -67,6 +69,68 @@ Taking a look at the contents of the directory in the left plane we can see that
 
 The only files that we will need to access during this lab are **.env-sample** and **main.py**.
 
-We are going to start off creating a new file withing the CL_DEVWKS-225 directory. You can do this from vscode by selecting the **New File** button from the left plane. 
+---
+
+## Creating/Editing Environmental Variables
+
+We are going to start off creating a new file within the CL_DEVWKS-225 directory. You can do this from vscode by selecting the **New File** button from the left plane. 
 
 ![text!](images/new_file.png)
+
+When prompted to name the file enter **.env**. Once you have done this the blank files should open in the editing plane. You will need to open the **.env-sample** file and copy its contents to the newly created **.env** file. The contents of your **.env** file should now look like this:
+
+```
+    # This is a sample of the .env file needed by python-dotenv package. 
+    # You should add the information for your NSO instance in the quotes below.
+    # You will need to rename this file to '.env' for python-dotenv to find it.
+     Note that the NSO_HOST variable should be formatted as 'https://url_of_nso.com'
+
+    NSO_HOST=""
+    NSO_USERNAME=""
+    NSO_PASSWORD=""
+```
+
+Your facilitator will provide with you data to populate these variables. We will explore more about what this file does in the next section. 
+
+---
+
+## Exploring **main.py**
+
+From the left plane select open the **main.py** file. Lets take a look at some of the components of the program.
+
+### Import Statements
+
+At the top of **main.py** you will notice several `import` statements. 
+
+```
+    # Imported packages
+    import requests
+    import urllib3
+    import json
+    import pandas as pd
+    from dotenv import load_dotenv, find_dotenv
+    import os
+```
+
+Each of these statements is giving our program access to code that resides in other Python libraries. This is a very small collection of libraries that will allow our program to operate. We didn't have to implement any of this functionality and can simply utilize the API available to interact with the code. Python has a very large collection of libraries to do all sorts of things. So what do our imported libraries do?:
+
+- requests - allows you to send HTTP/HTTPS request in a simple elegant manner
+- urllib3 - requests is built on-top of urllib3, we need to import it to suppress HTTPS warnings
+- json - a json encoder and decoder
+- pandas - a data analysis tool, we will use it to build data frames
+- dotenv - allows you to access environmental variables outside of your code
+- os - a portable way of using operating system functionality
+
+### Code Specific Requirements
+
+Next you will see a comment labeled `Code specific requirements`. There are two statements in this code block:
+
+```
+    # Code specific requirements
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    load_dotenv(find_dotenv())
+```
+Here is what those statements do:
+
+- `urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)` - since we are using self-signed certificates on NSO the request library will complain about an insecure connection. This line disables that warning. 
+- `load_dotenv(find_dotenv())` - consists of two function calls. The outer call `load_dotenv()` takes as an argument the location of a **.env** file (remember we made that earlier) and makes the variables in that file available to the program. Conveniently, `find_dotenv()` will locate the **.env** file by looking in the present working directory.  
