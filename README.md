@@ -171,3 +171,16 @@ Here is what these variables are:
 When we explore the functions within the code we will see how these are used.
 
 Note: You'll notice that we refer to these as 'global' variables. That means that these variables have global scope i.e. they can be accessed and modified (if they are of a mutable type) from anywhere within the code. A convention in many programming languages is to use UPPERCASE for global variables. This makes them easily recognizable. 
+
+### The main() Function
+
+Below the global variables you will find all of the function definitions for our program. If you scroll to the very bottom you will find a function definition called `main()` and an `if` statement:
+
+```
+    def main():
+        pass
+        # commented out function calls
+
+    if __name__ == '__main__':
+        main()
+```

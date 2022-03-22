@@ -1,4 +1,4 @@
-# Imported Packages
+# Imported packages
 import requests
 import urllib3
 import json
@@ -6,6 +6,7 @@ import pandas as pd
 from dotenv import load_dotenv, find_dotenv
 import os
 
+# Code specific requirements
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv(find_dotenv())
 
@@ -84,13 +85,14 @@ def get_device_info():
     df.to_excel('test.xlsx')
 
     print(df)
+    
 
 def main():
     pass
-    get_verify_restconf()
-    get_device_groups()
-    print(DEVICES)
-    get_device_info()
+    # get_verify_restconf()
+    # get_device_groups()
+    # print(DEVICES)
+    # get_device_info()
 
 
 if __name__ == '__main__':
