@@ -66,3 +66,7 @@ Taking a look at the contents of the directory in the left plane we can see that
 - SETUP.md (supplemental instructions on running this lab from a personal workstation)
 
 The only files that we will need to access during this lab are **.env-sample** and **main.py**.
+
+We are going to start off creating a new file withing the CL_DEVWKS-225 directory. You can do this from vscode by selecting the **New File** button from the left plane. 
+
+![text!](images/new_file.png)
