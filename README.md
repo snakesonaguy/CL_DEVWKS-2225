@@ -50,3 +50,21 @@ Now that you are in the lab directory we can open our IDE (vscode). To do this i
 `code .`
 
 Note: `code` is the command to open vscode and `.` is a refrence to the present working directory. 
+
+vscode should open on your desktop and you should see a screen similar to this:
+
+![text!](/images/open_code.png)
+
+Note: you will not have the .env file in your directory when you first clone it. No worries, we will be creating it. 
+
+Taking a look at the contents of the directory in the left plane we can see that we have several items:
+
+- images (a directory containing the images for the README.md)
+- .env-sample (a sample file we will use to configure variables)
+- .gitignore (tells git which files not to track)
+- main.py (where our main and helper functions/code reside)
+- README.md (the markdown version of **THIS** file)
+- requirements.txt (a list of the additional Python packages used in this program)
+- SETUP.md (supplemental instructions on running this lab from a personal workstation)
+
+The only files that we will need to access during this lab are **.env-sample** and **main.py**.
