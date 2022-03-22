@@ -85,9 +85,9 @@ def get_device_info():
 def main():
     pass
     get_verify_restconf()
-    # get_device_groups()
-    # print(DEVICES)
-    # get_device_info()
+    get_device_groups()
+    print(DEVICES)
+    get_device_info()
 
 
 if __name__ == '__main__':
