@@ -11,7 +11,7 @@ Welcome to Cisco Live! In this DevNet workshop we will be covering how to automa
 
 If you are taking this lab at CLUS 2022 you should be provided a workstation. This workstation has been configured with the correct Python packages, tools, and an IDE (vsCode) to perform the lab. If you are performing this lab on your own equipment please refer to the **SETUP.md** file. 
 
-Throught the lab guide there will be images of Linux terminals. In some instances your machine name, or user name may not match what is in the image. As long as you are in the correct directory this should cause you no issues. 
+Throughout the lab guide there will be images of Linux terminals. In some instances your machine name, or user name may not match what is in the image. As long as you are in the correct directory this should cause you no issues. 
 
 ## Lab Environment:
 
@@ -28,3 +28,11 @@ You should currently be viewing this README.md file at: https://github.com/snake
 In the terminal box enter the command: 
 
 `git clone https://github.com/snakesonaguy/CL_DEVWKS-2225`
+
+You should now have **CL_DEVWKS-2225** directory on your desktop. You can now move into the lab directory. From the open terminal type:
+
+`cd CL_DEVWKS-2225`
+
+You can see the contents of the directory by issuing the `ls` command. 
+
+![text!](/images/ls.png)
