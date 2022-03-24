@@ -249,7 +249,7 @@ In this line we are assigning the **return** of a function call to requests to t
 
 1. URL - this is the path to the service we are trying to access. This is only required parameter for a `request.get()` and is assigned to our variable `path`
 2. auth - this is a tuple containing authentication information. Ours is assigned to our global variable `AUTH`. Which is pulled from our **.env** file. 
-3. headers - this is a dictionary of headers send to the URL. Ours is assigned to our global variable `HEADERS`. Which is pulled from our **.env** file.
-4. verify - this is a boolean (the deafult is == true) that dictates whether the servers TLS certifiate is verified or not. Ours is assigned to the global variable `VERIFY`.
+3. headers - this is a dictionary of headers send to the URL. Ours is assigned to our global variable `HEADERS`.
+4. verify - this is a boolean (the deafult is == true) that dictates whether the server's TLS certifiate is verified. Ours is assigned to the global variable `VERIFY`.
 
 Note: You can probably see the utility of global functions at this point. Each of those variables are used multiple times within the code. If any of the values ever needed to change we would only need to change them in one location. 
