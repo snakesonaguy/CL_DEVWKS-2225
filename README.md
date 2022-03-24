@@ -19,6 +19,14 @@ Throughout the lab guide there will be images of Linux terminals. In some instan
 
 The lab you will be interacting with today consists of the workstation, an NSO instance, and various Cisco devices. These Cisco devices are virtualized and running on Cisco Modeling Labs (CML). The Cisco devices include platforms running IOS-XE, IOS-XR, ASA, NX-OS. We will discover more about these devices during the lab. 
 
+## References
+
+NSO RESTConf API Reference
+- https://developer.cisco.com/docs/nso/#!cisco-nso-restconf-swagger-api-docs-overview
+
+W3Schools Python Requests get() Method
+- https://www.w3schools.com/python/ref_requests_get.asp
+  
 # Lab Guide
 
 ## Obtaining the code:
@@ -214,12 +222,12 @@ One of the first things we should do is to verify that we have access to our NSO
     ## Verifies access to the RestConf API of NSO
     def get_verify_restconf():
         path = '{}/restconf'.format(NSO_HOST)
-        r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=VERIFY)
-        if r.status_code == 200:
-            ret = (json.loads(r.text))
-            print(json.dumps(ret, indent=4))
+        req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
+        if req.status_code == 200:
+            data = (json.loads(req.text))
+            print(json.dumps(data, indent=4))
         else:
-            print('Error Code: {}'.format(r.status_code))
+            print('Error Code: {}'.format(req.status_code))
 
 ```
 First we see the function definition `def get_verify_restconf()`. For our functions the first part of the name is what type of HTTP verb we are using. All of our calls to NSO will be GET calls, but you can also make POST, PATCH, PUT, DELETE calls. The second part of the name provides information about the intent of the function. So  `get_verify_restconf` means that we are making an HTTP GET in order to verify our access to the RESTConf API. 
@@ -232,3 +240,16 @@ The next line is a variable named `path`.
 
 This variable is assigned to `'{}/restconf'.format(NSO_HOST)`. So what is this variable? It is a formated string. This is formatted by taking the variable stored in `NSO_HOST` and placing into the string at the location of the `{}`. So what stored in `path` is `https://path_to_nso.com/restconf`. 
 
+Next we have another variable called `req`.
+
+```
+    req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
+```
+In this line we are assigning the **return** of a function call to requests to the variable `req`. So what does that mean exactly? Within the requests library there are different methods (functions) that can be performed. The one we are using here is **get**. We tell requests to initiate a get with the `request.get()` method. However, we need to pass some parameters to the function. The ones we are passing here are:
+
+1. URL - this is the path to the service we are trying to access. This is only required parameter for a `request.get()` and is assigned to our variable `path`
+2. auth - this is a tuple containing authentication information. Ours is assigned to our global variable `AUTH`. Which is pulled from our **.env** file. 
+3. headers - this is a dictionary of headers send to the URL. Ours is assigned to our global variable `HEADERS`. Which is pulled from our **.env** file.
+4. verify - this is a boolean (the deafult is == true) that dictates whether the servers TLS certifiate is verified or not. Ours is assigned to the global variable `VERIFY`.
+
+Note: You can probably see the utility of global functions at this point. Each of those variables are used multiple times within the code. If any of the values ever needed to change we would only need to change them in one location. 

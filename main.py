@@ -25,19 +25,18 @@ PLATFORM_DETAILS = {}
 ## Verifies access to the RestConf API of NSO
 def get_verify_restconf():
     path = '{}/restconf'.format(NSO_HOST)
-    r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=VERIFY)
-    if r.status_code == 200:
-        ret = (json.loads(r.text))
-        print(type(ret))
-        # print(json.dumps(ret, indent=4))
+    req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
+    if req.status_code == 200:
+        data = (json.loads(req.text))
+        print(json.dumps(data, indent=4))
     else:
-        print('Error Code: {}'.format(r.status_code))
+        print('Error Code: {}'.format(req.status_code))
 
 ## Retrieves the device groups configured on NSO
 def get_device_groups():
     ## You will need to edit the following line to gather only the members of the ALL group
     path = '{}/restconf/data/tailf-ncs:devices/device-group=ALL'.format(NSO_HOST)
-    r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=False)
+    r = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
     if r.status_code == 200:
         ret = (json.loads(r.text))
 
@@ -51,7 +50,7 @@ def get_device_groups():
            for m in g['member']:
                print('\t\t{}'.format(m))
         # UNCOMMENT 1 STOP
-        #
+        
         # UNCOMMENT 2 START
                DEVICES.append(m)
         # UNCOMMENT 2 STOP
@@ -66,7 +65,7 @@ def get_device_info():
 
     for device in DEVICES:
         path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
-        r = requests.get(path, auth=AUTH, headers=HEADERS, params=None, verify=False)
+        r = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
         if r.status_code == 200:
             info = r.json()
             print(info)
@@ -92,7 +91,7 @@ def main():
     pass
     get_verify_restconf()
     # get_device_groups()
-    # print(DEVICES)
+    # # print(DEVICES)
     # get_device_info()
 
 
