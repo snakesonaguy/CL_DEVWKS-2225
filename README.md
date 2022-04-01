@@ -31,7 +31,7 @@ W3Schools Python Requests get() Method
 
 ## Obtaining the code:
 
-You should currently be viewing this README.md file at: https://github.com/snakesonaguy/CL_DEVWKS-2225. We will be utilizing Git to clone this repository onto our workstations. Right-click anywhere on your desktop and select 'Open in terminal'. This should open a terminal window in the Desktop directory:
+You should currently be viewing this README.md file at: https://github.com/snakesonaguy/CL_DEVWKS-1671. We will be utilizing Git to clone this repository onto our workstations. Right-click anywhere on your desktop and select 'Open in terminal'. This should open a terminal window in the Desktop directory:
 
 ![text!](/images/open_term.png)
 
