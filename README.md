@@ -24,12 +24,18 @@ The lab you will be interacting with today consists of the workstation, an NSO i
 NSO RESTConf API Reference
 - https://developer.cisco.com/docs/nso/#!cisco-nso-restconf-swagger-api-docs-overview
 
-W3Schools Python Requests get() Method
+Python Requests get() Method (cite W3Schools)
 - https://www.w3schools.com/python/ref_requests_get.asp
+
+Python Requests Object (cite W3Schools)
+- https://www.w3schools.com/python/ref_requests_response.asp
+
+HTTP Response Codes (cite Mozilla)
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
   
 # Lab Guide
 
-## Obtaining the code:
+## STEP 1: Obtaining the code:
 
 You should currently be viewing this README.md file at: https://github.com/snakesonaguy/CL_DEVWKS-1671. We will be utilizing Git to clone this repository onto our workstations. Right-click anywhere on your desktop and select 'Open in terminal'. This should open a terminal window in the Desktop directory:
 
@@ -43,7 +49,7 @@ You should now have **CL_DEVWKS-2225** directory on your desktop.
 
 ---
 
-## Opening the code in your Integrated Development Environment:
+## STEP 2: Opening the code in your Integrated Development Environment:
 
 You can now move into the lab directory. From the open terminal type:
 
@@ -79,7 +85,7 @@ The only files that we will need to access during this lab are **.env-sample** a
 
 ---
 
-## Creating/Editing Environmental Variables
+## STEP 3: Creating/Editing Environmental Variables
 
 We are going to start off creating a new file within the CL_DEVWKS-225 directory. You can do this from vscode by selecting the **New File** button from the left plane. 
 
@@ -102,7 +108,7 @@ Your facilitator will provide with you data to populate these variables. We will
 
 ---
 
-## Exploring **main.py**
+## STEP 4: Exploring **main.py**
 
 From the left plane select open the **main.py** file. Lets take a look at some of the components of the program.
 
@@ -212,7 +218,7 @@ You'll notice that the program does nothing. This is because the only statement 
 
 --- 
 
-## Calling Network Services Orchestrator
+## STEP 5: Calling Network Services Orchestrator
 
 ### Verifying Access to the NSO Instance
 
@@ -253,3 +259,49 @@ In this line we are assigning the **return** of a function call to requests to t
 4. verify - this is a boolean (the deafult is == true) that dictates whether the server's TLS certifiate is verified. Ours is assigned to the global variable `VERIFY`.
 
 Note: You can probably see the utility of global functions at this point. Each of those variables are used multiple times within the code. If any of the values ever needed to change we would only need to change them in one location. 
+
+The next section of code you will see is this:
+
+```
+    if req.status_code == 200:
+        data = (json.loads(req.text))
+        print(json.dumps(data, indent=4))
+    else:
+        print('Error Code: {}'.format(req.status_code))
+```
+
+Stored within the requests object `req` is a lot of information. In the references section you can explore more about the requests object. For our purposes we will be using a few of the attributes. One of the important attributes of the requests object is the `response_code`. For this request a successful **get** will result in the HTTP Response of 200. So our IF-ELSE statement says to check the response code, if it is 200 (successful) do-stuff (we'll see what that stuff is next), if it is not 200 (unssuccessful) print the response code. By using this flow control we keep our program from crashing if the request is not successful, and we get some information about what the problem may be. 
+
+Assuming that the request is successful (we have a response code of 200) we can now do something useful with that object. Here we have the two lines of code executed on a successful get:
+
+```
+    data = (json.loads(req.text))
+    print(json.dumps(data, indent=4))
+```
+
+Stored within the request object is an attribute called `text`. This attribute is simply the payload of the requests object. In our scenario the `text` attribute is formatted as a JSON string. We could print the string and see what is in it, but we cannot index into the payload in any meaningful way. So in the first line of this code block take the text of the request object and use the `json.loads()` function to create a Python dictionary. We assign that dictionary to the variable `data`. 
+
+The next line is a print statement that takes our `data` dictionary and prints it as a JSON string with some formatting to make it easier to read. 
+
+Finally we are able to make our first call to NSO. Go into the `main()` function and uncomment the call to `get_verify_restconf()`. You can then run the program by hitting Ctrl+F5 or the play button in the top right of the vscode window. 
+
+Note: We will be commenting and uncommenting many lines of code. You can easily comment/uncomment a line in vscode by hitting Ctrl+/ while having your cursor on the line to be modified. 
+
+Within your terminal you should see the following:
+
+```
+    {
+        "ietf-restconf:restconf": {
+            "data": {},
+            "operations": {},
+            "yang-library-version": "2019-01-04"
+        }
+    }
+```
+
+This output means that we can successfully reach and authenticate to our NSO instance. You can now comment out `get_verify_restconf()` and move on to the next section. 
+
+### Getting Device Groups
+
+
+

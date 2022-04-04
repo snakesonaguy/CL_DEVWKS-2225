@@ -86,6 +86,9 @@ def get_device_info():
 
     print(df)
 
+def create_xlsx(data_frame):
+    pass
+
 
 def main():
     pass
