@@ -92,7 +92,7 @@ def create_xlsx(data_frame):
 
 def main():
     pass
-    get_verify_restconf()
+    # get_verify_restconf()
     # get_device_groups()
     # # print(DEVICES)
     # get_device_info()
