@@ -56,7 +56,7 @@ def get_device_groups():
         # UNCOMMENT 2 STOP
 
     else:
-        print('Error Code: {}'.format(r.status_code))
+        print('Error Code: {}'.format(req.status_code))
 
 ## Retrieves platform information for each individual device onboarded to NSO
 def get_device_info():
