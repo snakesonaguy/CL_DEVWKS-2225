@@ -212,6 +212,8 @@ In the above function the argument `num` is passed to the function `double`. The
 
 The `if __name__ == '__main__':` statement basically allows our code to either be run as a standalone program or imported into a different program. This is a good practice. 
 
+### STEP 6: Run the program
+
 For now let's run our program for the first time. With the **main.py** file open push the play button in the top right corner of vscode. 
 
 You'll notice that the program does nothing. This is because the only statement within `main`, that is not commented out, is `pass`. `pass` is a NULL statement meaing that it does nothing. Let's move on to something more relevant. 
@@ -230,7 +232,7 @@ One of the first things we should do is to verify that we have access to our NSO
         path = '{}/restconf'.format(NSO_HOST)
         req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
         if req.status_code == 200:
-            data = (json.loads(req.text))
+            data = (req.json())
             print(json.dumps(data, indent=4))
         else:
             print('Error Code: {}'.format(req.status_code))
@@ -264,7 +266,7 @@ The next section of code you will see is this:
 
 ```
     if req.status_code == 200:
-        data = (json.loads(req.text))
+        data = (req.json())
         print(json.dumps(data, indent=4))
     else:
         print('Error Code: {}'.format(req.status_code))
@@ -275,13 +277,15 @@ Stored within the requests object `req` is a lot of information. In the referenc
 Assuming that the request is successful (we have a response code of 200) we can now do something useful with that object. Here we have the two lines of code executed on a successful get:
 
 ```
-    data = (json.loads(req.text))
+    data = (req.json())
     print(json.dumps(data, indent=4))
 ```
 
-Stored within the request object is an attribute called `text`. This attribute is simply the payload of the requests object. In our scenario the `text` attribute is formatted as a JSON string. We could print the string and see what is in it, but we cannot index into the payload in any meaningful way. So in the first line of this code block take the text of the request object and use the `json.loads()` function to create a Python dictionary. We assign that dictionary to the variable `data`. 
+Stored within the request object is an attribute called `text`. This attribute is simply the payload of the requests object. In our scenario the `text` attribute is formatted as a JSON string. We could print the string and see what is in it, but we cannot index into the payload in any meaningful way. So in the first line of this code block take the text of the request object render it in JSON (this makes it iterable). We assign that dictionary to the variable `data`. 
 
-The next line is a print statement that takes our `data` dictionary and prints it as a JSON string with some formatting to make it easier to read. 
+The next line is a print statement that takes our `data` variable and prints it as a JSON string with some formatting to make it easier to read. 
+
+### STEP 2: Verify Access RestConf access to the NSO instance
 
 Finally we are able to make our first call to NSO. Go into the `main()` function and uncomment the call to `get_verify_restconf()`. You can then run the program by hitting Ctrl+F5 or the play button in the top right of the vscode window. 
 
@@ -305,9 +309,140 @@ This output means that we can successfully reach and authenticate to our NSO ins
 
 ## TASK 6: Getting Device Groups
 
-Now that we covered our first requests call to NSO 
+### STEP 1: Explore the get_device_groups() function
 
+Now that we verified our access to the NSO RestConf API we can begin gathering more useful information. One of the convenient features of Cisco NSO is the ability to create device groups. Devices can be group in any manner that suites your orgainization i.e. by vendor, model, operating system, role, etc. Groups can also contain other groups. The purpose of the `get_device_groups()` function is to retreive information about the groups (and their members) that are configured on NSO. 
 
+```
+    ## Retrieves the device groups configured on NSO
+    def get_device_groups():
+        ## You will need to edit the following line to gather only the members of the ALL group
+        path = '{}/restconf/data/tailf-ncs:devices/device-group'.format(NSO_HOST)
+        req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+        if req.status_code == 200:
+            data = (json.loads(req.text))
+            print(json.dumps(data, indent=4))
+
+            # # UNCOMMENT 1 START
+            # groups = data['tailf-ncs:device-group']
+            # for group in groups:
+            #    print('Group Name: {}'.format(group['name']))
+            #    print('\tMembers: ')
+            #    for member in group['member']:
+            #        print('\t\t{}'.format(member))
+            # # UNCOMMENT 1 STOP
+            
+            # # UNCOMMENT 2 START
+            #        DEVICES.append(m)
+            # # UNCOMMENT 2 STOP
+        else:
+            print('Error Code: {}'.format(r.status_code))
+```
+
+### STEP 2: Retreive all device group information
+
+Notice that the much of the function is currently commented out. As the function is currently coded it will make a get request to the path: `http://path_to_nso.com/restconf/data/tailf-ncs:devices/device-group`. The function then prints the return payload in the same way as the previous function. Go to the `main()` function and ensure that the `get_device_groups()` function is the only one that active and run the program. 
+
+You can see that the function call returns a sizeable amount of information. Let's look at the structure of the return.
+
+We can see that the return is a dictionary (JSON formatted) that contains a dictionary with the key **tailf-ncs:device-group** and the value is a list of the device groups configured. Each of the list members is itself a dictionary with the following structure:
+
+- name: STRING - name of the group
+- device-group: LIST - lists any subgroups that are members of this group
+- device-name: LIST - lists any devices that are members of this group
+- member: LIST - lists any devices that are members of this group or a subgroup
+- ned-id: LIST - lists Network Element Drivers used for the members of this group
+- alarm-summary: DICT - details any alarms on members of the group
+
+Note: device-group is only returned on groups with subgroups and device-name is only returned on groups with individual device members. 
+
+### STEP 3: Print out only device members
+
+While the information provided in the payload is helpful all we really need are the individual devices onboarded to NSO. As mentioned above this information is stored in `member` list of each group. Examine this code block:
+
+```
+    # # UNCOMMENT 1 START
+    # groups = data['tailf-ncs:device-group']
+    # for group in groups:
+    #    print('Group Name: {}'.format(group['name']))
+    #    print('\tMembers: ')
+    #    for member in group['member']:
+    #        print('\t\t{}'.format(member))
+    # # UNCOMMENT 1 STOP
+```
+
+This block of code will make it easier to see which devices are members of which groups. First, the contents of **tailf-ncs:device-group** are assigned to a variable `groups`. `groups` now contains a list of all of the groups. The code then iterates through the list and prints the names of the groups, then iterates through the `member` list and prints the names of the members. Uncomment the code block (from **UNCOMMENT 1 START** to **UNCOMMENT 1 STOP**) and run the program again. You should see something similar to this:
+
+```
+    Group Name: ALL
+        Members: 
+            core-rtr01
+            core-rtr02
+            dist-rtr01
+            dist-rtr02
+            dist-sw01
+            dist-sw02
+            edge-firewall01
+            internet-rtr01
+    Group Name: ASA-DEVICES
+        Members: 
+            edge-firewall01
+    Group Name: IOS-DEVICES
+        Members: 
+            dist-rtr01
+            dist-rtr02
+            internet-rtr01
+    Group Name: NXOS-DEVICES
+        Members: 
+            dist-sw01
+            dist-sw02
+    Group Name: XR-DEVICES
+        Members: 
+            core-rtr01
+            core-rtr02
+```
+
+Note: Your list may not contain the same groups or members. In this example we are running the program towards the NSO instance in DevNet sandbox. 
+
+### STEP 4: Modify the URL to return only the **ALL** group and add the devices to the **DEVICES** list
+
+Take a look at the NSO RestConf api documentation here (also listed in the references section): 
+
+https://developer.cisco.com/docs/nso/#!cisco-nso-restconf-swagger-api-docs-overview
+
+On the left hand plan you will see a link to **API**. This link will detail some of the calls that can be made towards NSO. Keep in mind that this section details only a portion of the calls that can be made towards NSO, focusing on some useful **GET** requests to gather information about devices on the network. 
+
+If you expand the section on Device **Groups/Alarms/Authgroups** you will see an example of how we are calling our NSO instance at `tailf-ncs:devices/device-group`. Using the other possible URLs in this section see if you can figure out how to modify the URL (remember the URL is stored in the `path` variable) in this function to only pull the members from the **ALL** group. Once you think you have this figured out run the program again. Your output should be similar to this:
+
+```
+Group Name: ALL
+    Members: 
+        core-rtr01
+        core-rtr02
+        dist-rtr01
+        dist-rtr02
+        dist-sw01
+        dist-sw02
+        edge-firewall01
+        internet-rtr01
+```
+Note: As mentioned previously NSO allows you to group your devices in different ways, but it is a good practice to always have a group that includes all devices. 
+
+We now need to store the device names in the `DEVICES` list. We are going to use the `DEVICES` list to gather information about each device in the next step. Examine this section of the function:
+
+```
+    # UNCOMMENT 2 START
+        DEVICES.append(m)
+    # UNCOMMENT 2 STOP
+```
+
+This section of code takes each of the device names and adds them to the global `DEVICES` list. You can now uncomment this section. Now if we print the `DEVICES` list out it will look similar to this:
+
+```
+    ['core-rtr01', 'core-rtr02', 'dist-rtr01', 'dist-rtr02', 'dist-sw01', 'dist-sw02', 'edge-firewall01', 'internet-rtr01']
+```
+
+Note: It is important that we pulled device names from the **ALL** group only otherwise we would end up with duplicates in our `DEVICES` list. However, we could have done this without modifying the ``path` variable. We could have used Python to test for the presence of an element in the list before adding it. If you have time see if you can figure out how to do this. 
 
 ## References
 

@@ -27,7 +27,8 @@ def get_verify_restconf():
     path = '{}/restconf'.format(NSO_HOST)
     req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
     if req.status_code == 200:
-        data = (json.loads(req.text))
+        # data = (json.loads(req.text))
+        data = req.json()
         print(json.dumps(data, indent=4))
     else:
         print('Error Code: {}'.format(req.status_code))
@@ -36,27 +37,28 @@ def get_verify_restconf():
 def get_device_groups():
     ## You will need to edit the following line to gather only the members of the ALL group
     path = '{}/restconf/data/tailf-ncs:devices/device-group=ALL'.format(NSO_HOST)
-    r = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
-    if r.status_code == 200:
-        ret = (json.loads(r.text))
-
-        print(json.dumps(ret, indent=4))
+    req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+    if req.status_code == 200:
+        data = (req.json())
+        print(json.dumps(data, indent=4))
 
         # UNCOMMENT 1 START
-        groups = ret['tailf-ncs:device-group']
-        for g in groups:
-           print('Group Name: {}'.format(g['name']))
-           print('\tMembers: ')
-           for m in g['member']:
-               print('\t\t{}'.format(m))
+        groups = data['tailf-ncs:device-group']
+        for group in groups:
+            print('Group Name: {}'.format(group['name']))
+            print('\tMembers: ')
+            for member in group['member']:
+                print('\t\t{}'.format(member))
         # UNCOMMENT 1 STOP
-        
+
         # UNCOMMENT 2 START
-               DEVICES.append(m)
+                DEVICES.append(member)
         # UNCOMMENT 2 STOP
+
     else:
         print('Error Code: {}'.format(r.status_code))
 
+## Retrieves platform information for each individual device onboarded to NSO
 def get_device_info():
     os = []
     version = []
@@ -65,10 +67,9 @@ def get_device_info():
 
     for device in DEVICES:
         path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
-        r = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
-        if r.status_code == 200:
-            info = r.json()
-            print(info)
+        req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+        if req.status_code == 200:
+            info = req.json()
             os.append(info['tailf-ncs:platform']['name'])
             version.append(info['tailf-ncs:platform']['version'])
             model.append(info['tailf-ncs:platform']['model'])
@@ -79,23 +80,22 @@ def get_device_info():
             model.append('ERROR')
             serial.append('ERROR')
 
-    data = {'OS Type': os, 'Version': version, 'Model': model, 'Serial': serial}
+    device_data = {'OS Type': os, 'Version': version, 'Model': model, 'Serial': serial}
 
+    return device_data
+
+def create_data_frame(data):
     df = pd.DataFrame(data, index=DEVICES)
-    df.to_excel('test.xlsx')
-
-    print(df)
-
-def create_xlsx(data_frame):
-    pass
+    return(df)
 
 
 def main():
     pass
-    # get_verify_restconf()
-    # get_device_groups()
-    # # print(DEVICES)
-    # get_device_info()
+    get_verify_restconf()
+    get_device_groups()
+    device_data = get_device_info()
+    device_df = create_data_frame(device_data)
+    print(device_df)
 
 
 if __name__ == '__main__':
