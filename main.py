@@ -59,7 +59,7 @@ def get_device_groups():
         print('Error Code: {}'.format(req.status_code))
 
 ## Retrieves platform information for each individual device onboarded to NSO
-def get_device_info():
+def get_device_platform_details():
     os = []
     version = []
     model = []
@@ -93,9 +93,9 @@ def main():
     pass
     get_verify_restconf()
     get_device_groups()
-    device_data = get_device_info()
-    device_df = create_data_frame(device_data)
-    print(device_df)
+    device_data = get_device_platform_details()
+    # device_df = create_data_frame(device_data)
+    # print(device_df)
 
 
 if __name__ == '__main__':

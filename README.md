@@ -444,6 +444,95 @@ This section of code takes each of the device names and adds them to the global 
 
 Note: It is important that we pulled device names from the **ALL** group only otherwise we would end up with duplicates in our `DEVICES` list. However, we could have done this without modifying the ``path` variable. We could have used Python to test for the presence of an element in the list before adding it. If you have time see if you can figure out how to do this. 
 
+## TASK 7: Getting Device Platform Details
+
+### STEP 1: Explore the get_device_platform_details() function
+
+The global `DEVICES` list is now populated with the names of the devices in our inventory. We can use this information to make calls to NSO in order to gather information about each device. Take a look at the `get_device_platform_deatils()` function below:
+
+```
+    def get_device_platform_details():
+        os = []
+        version = []
+        model = []
+        serial = []
+
+        for device in DEVICES:
+            path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
+            req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+            if req.status_code == 200:
+                info = req.json()
+                os.append(info['tailf-ncs:platform']['name'])
+                version.append(info['tailf-ncs:platform']['version'])
+                model.append(info['tailf-ncs:platform']['model'])
+                serial.append(info['tailf-ncs:platform']['serial-number'])
+            else:
+                error = 'Error Code: {}'.format(req.status_code)
+                os.append(error)
+                version.append(error)
+                model.append(error)
+                serial.append(error)
+
+        device_data = {'OS Type': os, 'Version': version, 'Model': model, 'Serial': serial}
+
+        return device_data
+```
+
+This function will iterate through the `DEVICES` list and make a RestConf call to gather platform information. The retrieved information will be stored in four Python lists:
+
+ - `os` - the operating system of the device 
+ - `version` - the version of the operating system 
+ - `model` - the model of the device 
+ - `serial` - the serial number of the device
+
+
+### STEP 2: Calling the NSO for platform details
+
+If you go back to the NSO RestConf documentation and navigate to the **Single Device HW / SW Platform Info** (https://developer.cisco.com/docs/nso/#!single-device-hw-sw-platform-info) you can execute that call towards the DevNet Sandbox to see how the return is structured. 
+
+```
+    {
+        "tailf-ncs:platform": {
+            "name": "ios-xe",
+            "version": "16.11.1b",
+            "model": "CSR1000V",
+            "serial-number": "9KEPZN1TV7G"
+        }
+    }
+```
+This will make visualizing what our `for` loop is doing more clear. First the code constructs our URL with name of the device in the `DEVICES` list:
+
+```
+    path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
+```
+
+What is stored in `path` is `https://path_to_nso.com/restconf/data/tailf-ncs:devices=DEVICES[0-len(DEVICES)]/platform` 
+
+Now that we have the URL for a single device we can create our requests object in the same way we have done previously:
+
+```
+    req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+```
+
+Once again if the `status_code` is 200 our call was successful and we can process the data. First we store the return payload in a variable called `info`.
+
+```
+    info = req.json()
+```
+
+Next we index into `info` storing the the platform details in the previously defined lists(`os`, `version`, `model` and `serial`):
+
+```
+    os.append(info['tailf-ncs:platform']['name'])
+    version.append(info['tailf-ncs:platform']['version'])
+    model.append(info['tailf-ncs:platform']['model'])
+    serial.append(info['tailf-ncs:platform']['serial-number'])
+```
+
+Since we iterating through the `DEVICES` list in order the same index will apply to the other Python lists. For example, if **router1** is the first device in `DEVICES` its index will be 0. Its platform details will be stored at index 0 of each of the previously created lists. 
+
+
+
 ## References
 
 NSO RESTConf API Reference
