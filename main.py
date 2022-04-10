@@ -87,16 +87,10 @@ def get_device_platform_details():
     PLATFORM_DETAILS['Serial'] = serial
 
 ## Creates a Pandas Data Frame 
-# def create_data_frame(data):
-#     df = pd.DataFrame(data, index=DEVICES)
-#     # Uncomment the line below if you want to see the formatting of the data frame.
-#     # print(df)
-#     return(df)
-
 def create_data_frame():
     df = pd.DataFrame(PLATFORM_DETAILS, index=DEVICES)
     # Uncomment the line below if you want to see the formatting of the data frame.
-    print(df)
+    # print(df)
     return(df)
 
 def main():
@@ -104,7 +98,6 @@ def main():
     get_verify_restconf()
     get_device_groups()
     get_device_platform_details()
-    # device_df = create_data_frame(PLATFORM_DETAILS)
     device_df = create_data_frame()
     device_df.to_excel('./test.xlsx')
     
