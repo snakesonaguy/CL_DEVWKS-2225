@@ -617,12 +617,33 @@ Pandas is a Python Library that is used in data analysis. The library includes a
 
 ```
 ## Creates a Pandas Data Frame 
-    def create_data_frame(data):
-        df = pd.DataFrame(data, index=DEVICES)
+    def create_data_frame():
+        df = pd.DataFrame(PLATFORM_DETAILS, index=DEVICES)
         # Uncomment the line below if you want to see the formatting of the data frame.
         # print(df)
         return(df)
 ```
+This function utilizes the platform data stored in `PLATFORM_DETAILS` to create columns of information, and uses the device names in `DEVICES` to index the columns. The data frame will end up looking similar to this:
+
+```
+                         OS Type          Version                           Model           Serial
+core-rtr01       Error Code: 204  Error Code: 204                 Error Code: 204  Error Code: 204
+core-rtr02       Error Code: 204  Error Code: 204                 Error Code: 204  Error Code: 204
+dist-rtr01                ios-xe         16.11.1b                        CSR1000V      9KEPZN1TV7G
+dist-rtr02                ios-xe         16.11.1b                        CSR1000V      9NXO8PIMBCS
+dist-sw01                  NX-OS           9.2(3)  cisco Nexus9000 9000v Chassis       9I9QUEGF4HH
+dist-sw02                  NX-OS           9.2(3)  cisco Nexus9000 9000v Chassis       9MGCEDFFPNT
+edge-firewall01              asa          9.12(2)                            ASAv      9AECK15LSLF
+internet-rtr01            ios-xe         16.11.1b                        CSR1000V      929MFXYBMRP
+```
+
+We call this function from `main()` with this line of code:
+
+```
+    device_df = create_data_frame()
+```
+
+This line creates a data frame called `device_df` by p
 
 Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
 
