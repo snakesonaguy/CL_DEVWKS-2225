@@ -75,15 +75,18 @@ def get_device_platform_details():
             model.append(info['tailf-ncs:platform']['model'])
             serial.append(info['tailf-ncs:platform']['serial-number'])
         else:
-            os.append('ERROR')
-            version.append('ERROR')
-            model.append('ERROR')
-            serial.append('ERROR')
+            error = 'Error Code: {}'.format(req.status_code)
+            os.append(error)
+            version.append(error)
+            model.append(error)
+            serial.append(error)
 
-    device_data = {'OS Type': os, 'Version': version, 'Model': model, 'Serial': serial}
+    PLATFORM_DETAILS['OS Type'] = os 
+    PLATFORM_DETAILS['Version'] =  version 
+    PLATFORM_DETAILS['Model'] = model 
+    PLATFORM_DETAILS['Serial'] = serial
 
-    return device_data
-
+## Creates a Pandas Data Frame 
 def create_data_frame(data):
     df = pd.DataFrame(data, index=DEVICES)
     return(df)
@@ -93,9 +96,10 @@ def main():
     pass
     get_verify_restconf()
     get_device_groups()
-    device_data = get_device_platform_details()
-    # device_df = create_data_frame(device_data)
-    # print(device_df)
+    get_device_platform_details()
+    device_df = create_data_frame(PLATFORM_DETAILS)
+    print(device_df)
+ 
 
 
 if __name__ == '__main__':

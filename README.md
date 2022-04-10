@@ -473,9 +473,10 @@ The global `DEVICES` list is now populated with the names of the devices in our 
                 model.append(error)
                 serial.append(error)
 
-        device_data = {'OS Type': os, 'Version': version, 'Model': model, 'Serial': serial}
-
-        return device_data
+        PLATFORM_DETAILS['OS Type'] = os 
+        PLATFORM_DETAILS['Version'] =  version 
+        PLATFORM_DETAILS['Model'] = model 
+        PLATFORM_DETAILS['Serial'] = serial
 ```
 
 This function will iterate through the `DEVICES` list and make a RestConf call to gather platform information. The retrieved information will be stored in four Python lists:
@@ -529,7 +530,81 @@ Next we index into `info` storing the the platform details in the previously def
     serial.append(info['tailf-ncs:platform']['serial-number'])
 ```
 
-Since we iterating through the `DEVICES` list in order the same index will apply to the other Python lists. For example, if **router1** is the first device in `DEVICES` its index will be 0. Its platform details will be stored at index 0 of each of the previously created lists. 
+Since we iterate through the `DEVICES` list in order the same index will apply to the other Python lists. For example, if **router1** is the first device in `DEVICES` its index will be 0. Its platform details will be stored at index 0 of each of the previously created lists. 
+
+As with our previous functions we want to account for errors where the API call is not successful. We do this in our `else` statement:
+
+```
+    else:
+        error = 'Error Code: {}'.format(req.status_code)
+        os.append(error)
+        version.append(error)
+        model.append(error)
+        serial.append(error)
+
+```
+First we construct a string `error` which contains the `status_code`. We then append that string into the platform lists in place of the information that should have been received. It is important we do this because if we did not append anything our indexing would be thrown off. 
+
+### STEP 3: Constructing and returning the device_data dictionary
+
+Once all of the platform lists are populated we can populate the global Python dictionary `PLATFORM_DETAILS` with the information we have gathered. We do this with the following lines of code:
+
+```
+    PLATFORM_DETAILS['OS Type'] = os 
+    PLATFORM_DETAILS['Version'] =  version 
+    PLATFORM_DETAILS['Model'] = model 
+    PLATFORM_DETAILS['Serial'] = serial
+
+```
+
+Let's see what is now stored in the `PLATFORM_DETAILS` dictionary:
+
+```
+    {
+        "OS Type": [
+            "Error Code: 204",
+            "Error Code: 204",
+            "ios-xe",
+            "ios-xe",
+            "NX-OS",
+            "NX-OS",
+            "asa",
+            "ios-xe"
+        ],
+        "Version": [
+            "Error Code: 204",
+            "Error Code: 204",
+            "16.11.1b",
+            "16.11.1b",
+            "9.2(3)",
+            "9.2(3)",
+            "9.12(2)",
+            "16.11.1b"
+        ],
+        "Model": [
+            "Error Code: 204",
+            "Error Code: 204",
+            "CSR1000V",
+            "CSR1000V",
+            "cisco Nexus9000 9000v Chassis ",
+            "cisco Nexus9000 9000v Chassis ",
+            "ASAv",
+            "CSR1000V"
+        ],
+        "Serial": [
+            "Error Code: 204",
+            "Error Code: 204",
+            "9KEPZN1TV7G",
+            "9NXO8PIMBCS",
+            "9I9QUEGF4HH",
+            "9MGCEDFFPNT",
+            "9AECK15LSLF",
+            "929MFXYBMRP"
+        ]
+    }
+```
+
+In the example above you can see that the devices in `DEVICES` at indices 0-1 are returning with a status code of 204. 204 indicates an empty payload so the the information needed is not available. We point this out for illustrative purposes. 
 
 
 
