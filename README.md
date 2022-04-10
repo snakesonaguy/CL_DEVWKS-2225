@@ -339,6 +339,8 @@ Now that we verified our access to the NSO RestConf API we can begin gathering m
             print('Error Code: {}'.format(r.status_code))
 ```
 
+Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
+
 ### STEP 2: Retreive all device group information
 
 Notice that the much of the function is currently commented out. As the function is currently coded it will make a get request to the path: `http://path_to_nso.com/restconf/data/tailf-ncs:devices/device-group`. The function then prints the return payload in the same way as the previous function. Go to the `main()` function and ensure that the `get_device_groups()` function is the only one that active and run the program. 
@@ -486,6 +488,7 @@ This function will iterate through the `DEVICES` list and make a RestConf call t
  - `model` - the model of the device 
  - `serial` - the serial number of the device
 
+Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
 
 ### STEP 2: Calling the NSO for platform details
 
@@ -606,6 +609,22 @@ Let's see what is now stored in the `PLATFORM_DETAILS` dictionary:
 
 In the example above you can see that the devices in `DEVICES` at indices 0-1 are returning with a status code of 204. 204 indicates an empty payload so the the information needed is not available. We point this out for illustrative purposes. 
 
+## TASK 8: Creating a Data Frame and Saving to XLSX
+
+### STEP 1: Creating a Pandas Data Frame
+
+Pandas is a Python Library that is used in data analysis. The library includes a host of tools that allow the user to modify, format, and save data. Today we will be using Pandas to create a **data frame**. We do this with a very simple function called `create_data_frame()`:
+
+```
+## Creates a Pandas Data Frame 
+    def create_data_frame(data):
+        df = pd.DataFrame(data, index=DEVICES)
+        # Uncomment the line below if you want to see the formatting of the data frame.
+        # print(df)
+        return(df)
+```
+
+Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
 
 
 ## References
@@ -621,3 +640,7 @@ Python Requests Object (cite W3Schools)
 
 HTTP Response Codes (cite Mozilla)
 - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+Python Pandas Documentation (cite Pandas)
+- https://pandas.pydata.org
+

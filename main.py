@@ -89,6 +89,8 @@ def get_device_platform_details():
 ## Creates a Pandas Data Frame 
 def create_data_frame(data):
     df = pd.DataFrame(data, index=DEVICES)
+    # Uncomment the line below if you want to see the formatting of the data frame.
+    # print(df)
     return(df)
 
 
@@ -98,8 +100,8 @@ def main():
     get_device_groups()
     get_device_platform_details()
     device_df = create_data_frame(PLATFORM_DETAILS)
-    print(device_df)
- 
+    device_df.to_excel('./test.xlsx')
+    
 
 
 if __name__ == '__main__':
