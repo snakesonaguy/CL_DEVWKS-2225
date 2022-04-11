@@ -283,7 +283,7 @@ Assuming that the request is successful (we have a response code of 200) we can 
     print(json.dumps(data, indent=4))
 ```
 
-Stored within the request object is an attribute called `text`. This attribute is simply the payload of the requests object. In our scenario the `text` attribute is formatted as a JSON string. We could print the string and see what is in it, but we cannot index into the payload in any meaningful way. So in the first line of this code block take the text of the request object render it in JSON (this makes it iterable). We assign that dictionary to the variable `data`. 
+Stored within the request object is an attribute called `text`. This attribute is simply the payload of the requests object. In our scenario the `text` attribute is formatted as a JSON string. We could print the string and see what is in it, but we cannot index into the payload in any meaningful way. So in the first line of this code block takes the text of the request object and returns it in JSON (this makes it iterable). We assign that dictionary to the variable `data`. 
 
 The next line is a print statement that takes our `data` variable and prints it as a JSON string with some formatting to make it easier to read. 
 
@@ -313,7 +313,7 @@ This output means that we can successfully reach and authenticate to our NSO ins
 
 ### STEP 1: Explore the get_device_groups() function
 
-Now that we verified our access to the NSO RestConf API we can begin gathering more useful information. One of the convenient features of Cisco NSO is the ability to create device groups. Devices can be group in any manner that suites your orgainization i.e. by vendor, model, operating system, role, etc. Groups can also contain other groups. The purpose of the `get_device_groups()` function is to retreive information about the groups (and their members) that are configured on NSO. 
+Now that we verified our access to the NSO RestConf API we can begin gathering more useful information. One of the convenient features of Cisco NSO is the ability to create device groups. Devices can be group in any manner that suits your orgainization i.e. by vendor, model, operating system, role, etc. Groups can also contain other groups. The purpose of the `get_device_groups()` function is to retreive information about the groups (and their members) that are configured on NSO. 
 
 ```
     ## Retrieves the device groups configured on NSO
@@ -322,7 +322,7 @@ Now that we verified our access to the NSO RestConf API we can begin gathering m
         path = '{}/restconf/data/tailf-ncs:devices/device-group'.format(NSO_HOST)
         req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
         if req.status_code == 200:
-            data = (json.loads(req.text))
+            data = (req.json())
             print(json.dumps(data, indent=4))
 
             # # UNCOMMENT 1 START
@@ -341,15 +341,13 @@ Now that we verified our access to the NSO RestConf API we can begin gathering m
             print('Error Code: {}'.format(r.status_code))
 ```
 
-Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
-
 ### STEP 2: Retreive all device group information
 
 Notice that the much of the function is currently commented out. As the function is currently coded it will make a get request to the path: `http://path_to_nso.com/restconf/data/tailf-ncs:devices/device-group`. The function then prints the return payload in the same way as the previous function. Go to the `main()` function and ensure that the `get_device_groups()` function is the only one that active and run the program. 
 
 You can see that the function call returns a sizeable amount of information. Let's look at the structure of the return.
 
-We can see that the return is a dictionary (JSON formatted) that contains a dictionary with the key **tailf-ncs:device-group** and the value is a list of the device groups configured. Each of the list members is itself a dictionary with the following structure:
+We can see that the return is a dictionary that contains a key **tailf-ncs:device-group** and the value is a list of the device groups configured. Each of the list members is itself a dictionary with the following structure:
 
 - name: STRING - name of the group
 - device-group: LIST - lists any subgroups that are members of this group
@@ -416,7 +414,7 @@ https://developer.cisco.com/docs/nso/#!cisco-nso-restconf-swagger-api-docs-overv
 
 On the left hand plan you will see a link to **API**. This link will detail some of the calls that can be made towards NSO. Keep in mind that this section details only a portion of the calls that can be made towards NSO, focusing on some useful **GET** requests to gather information about devices on the network. 
 
-If you expand the section on Device **Groups/Alarms/Authgroups** you will see an example of how we are calling our NSO instance at `tailf-ncs:devices/device-group`. Using the other possible URLs in this section see if you can figure out how to modify the URL (remember the URL is stored in the `path` variable) in this function to only pull the members from the **ALL** group. Once you think you have this figured out run the program again. Your output should be similar to this:
+If you expand the section on Device **Groups/Alarms/Authgroups** you will see an example of how we are calling our NSO instance at `tailf-ncs:devices/device-group`. Using the other possible API calls in this section see if you can figure out how to modify the URL (remember the URL is stored in the `path` variable) in this function to only pull the members from the **ALL** group. Once you think you have this figured out run the program again. Your output should be similar to this:
 
 ```
 Group Name: ALL
@@ -446,7 +444,7 @@ This section of code takes each of the device names and adds them to the global 
     ['core-rtr01', 'core-rtr02', 'dist-rtr01', 'dist-rtr02', 'dist-sw01', 'dist-sw02', 'edge-firewall01', 'internet-rtr01']
 ```
 
-Note: It is important that we pulled device names from the **ALL** group only otherwise we would end up with duplicates in our `DEVICES` list. However, we could have done this without modifying the ``path` variable. We could have used Python to test for the presence of an element in the list before adding it. If you have time see if you can figure out how to do this. 
+Note: It is important that we pulled device names from the **ALL** group only otherwise we would end up with duplicates in our `DEVICES` list. However, we could have done this without modifying the `path` variable. We could have used Python to test for the presence of an element in the list before adding it. If you have time see if you can figure out how to do this. 
 
 ## TASK 7: Getting Device Platform Details
 
@@ -465,11 +463,11 @@ The global `DEVICES` list is now populated with the names of the devices in our 
             path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
             req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
             if req.status_code == 200:
-                info = req.json()
-                os.append(info['tailf-ncs:platform']['name'])
-                version.append(info['tailf-ncs:platform']['version'])
-                model.append(info['tailf-ncs:platform']['model'])
-                serial.append(info['tailf-ncs:platform']['serial-number'])
+                data = req.json()
+                os.append(data['tailf-ncs:platform']['name'])
+                version.append(data['tailf-ncs:platform']['version'])
+                model.append(data['tailf-ncs:platform']['model'])
+                serial.append(data['tailf-ncs:platform']['serial-number'])
             else:
                 error = 'Error Code: {}'.format(req.status_code)
                 os.append(error)
@@ -483,14 +481,16 @@ The global `DEVICES` list is now populated with the names of the devices in our 
         PLATFORM_DETAILS['Serial'] = serial
 ```
 
-This function will iterate through the `DEVICES` list and make a RestConf call to gather platform information. The retrieved information will be stored in four Python lists:
+This function will iterate through the `DEVICES` list and make a RestConf call to gather platform information about each device. 
+
+The retrieved information will be stored in four Python lists:
 
  - `os` - the operating system of the device 
  - `version` - the version of the operating system 
  - `model` - the model of the device 
  - `serial` - the serial number of the device
 
-Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
+Go into the the main() function and uncomment the call to this function (i.e. make the function active).
 
 ### STEP 2: Calling the NSO for platform details
 
@@ -512,7 +512,7 @@ This will make visualizing what our `for` loop is doing more clear. First the co
     path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
 ```
 
-What is stored in `path` is `https://path_to_nso.com/restconf/data/tailf-ncs:devices=DEVICES[0-len(DEVICES)]/platform` 
+What is stored in `path` is `https://path_to_nso.com/restconf/data/tailf-ncs:devices=DEVICES[0::len(DEVICES)]/platform` 
 
 Now that we have the URL for a single device we can create our requests object in the same way we have done previously:
 
@@ -520,13 +520,13 @@ Now that we have the URL for a single device we can create our requests object i
     req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
 ```
 
-Once again if the `status_code` is 200 our call was successful and we can process the data. First we store the return payload in a variable called `info`.
+Once again if the `status_code` is 200 our call was successful and we can process the data. First we store the return payload in a variable called `data`.
 
 ```
-    info = req.json()
+    data = req.json()
 ```
 
-Next we index into `info` storing the the platform details in the previously defined lists(`os`, `version`, `model` and `serial`):
+Next we index into `data` storing the the platform details in the previously defined lists(`os`, `version`, `model` and `serial`):
 
 ```
     os.append(info['tailf-ncs:platform']['name'])
@@ -615,7 +615,7 @@ In the example above you can see that the devices in `DEVICES` at indices 0-1 ar
 
 ### STEP 1: Creating a Pandas Data Frame
 
-Pandas is a Python Library that is used in data analysis. The library includes a host of tools that allow the user to modify, format, and store data. Today we will be using Pandas to create a **data frame**. We do this with a very simple function called `create_data_frame()`:
+Pandas is a Python Library that is used for data analysis. The library includes a host of tools that allow the user to modify, format, and store data. Today we will be using Pandas to create a **data frame**. We do this with a very simple function called `create_data_frame()`:
 
 ```
 ## Creates a Pandas Data Frame 
@@ -645,7 +645,7 @@ We call this function from `main()` with this line of code:
     device_df = create_data_frame()
 ```
 
-This line creates a data frame called `device_df` by passing the `PLATFORM_DETAILS` dictionary as the data, and the `DEVICES` list as the index. The function returns the data frame to the calling function (in this case main().
+This line creates a data frame called `device_df` by calling `create_data_frame()`. `create_data_frame()` returns the data frame to the calling function (in this case the main() function).
 
 Go into the the main() function and uncomment the call to this function (i.e. make the function active).
 
