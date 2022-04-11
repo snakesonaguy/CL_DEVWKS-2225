@@ -27,7 +27,6 @@ def get_verify_restconf():
     path = '{}/restconf'.format(NSO_HOST)
     req = requests.get(path, auth=AUTH, headers=HEADERS, verify=VERIFY)
     if req.status_code == 200:
-        # data = (json.loads(req.text))
         data = req.json()
         print(json.dumps(data, indent=4))
     else:
@@ -42,18 +41,18 @@ def get_device_groups():
         data = (req.json())
         print(json.dumps(data, indent=4))
 
-        # UNCOMMENT 1 START
-        groups = data['tailf-ncs:device-group']
-        for group in groups:
-            print('Group Name: {}'.format(group['name']))
-            print('\tMembers: ')
-            for member in group['member']:
-                print('\t\t{}'.format(member))
-        # UNCOMMENT 1 STOP
+        # # UNCOMMENT 1 START
+        # groups = data['tailf-ncs:device-group']
+        # for group in groups:
+        #     print('Group Name: {}'.format(group['name']))
+        #     print('\tMembers: ')
+        #     for member in group['member']:
+        #         print('\t\t{}'.format(member))
+        # # UNCOMMENT 1 STOP
 
-        # UNCOMMENT 2 START
-                DEVICES.append(member)
-        # UNCOMMENT 2 STOP
+        # # UNCOMMENT 2 START
+        #         DEVICES.append(member)
+        # # UNCOMMENT 2 STOP
 
     else:
         print('Error Code: {}'.format(req.status_code))
@@ -95,11 +94,11 @@ def create_data_frame():
 
 def main():
     pass
-    get_verify_restconf()
-    get_device_groups()
-    get_device_platform_details()
-    device_df = create_data_frame()
-    device_df.to_excel('./test.xlsx')
+    # get_verify_restconf()
+    # get_device_groups()
+    # get_device_platform_details()
+    # device_df = create_data_frame()
+    # device_df.to_excel('./inventory.xlsx')
     
 
 

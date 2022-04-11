@@ -613,7 +613,7 @@ In the example above you can see that the devices in `DEVICES` at indices 0-1 ar
 
 ### STEP 1: Creating a Pandas Data Frame
 
-Pandas is a Python Library that is used in data analysis. The library includes a host of tools that allow the user to modify, format, and save data. Today we will be using Pandas to create a **data frame**. We do this with a very simple function called `create_data_frame()`:
+Pandas is a Python Library that is used in data analysis. The library includes a host of tools that allow the user to modify, format, and store data. Today we will be using Pandas to create a **data frame**. We do this with a very simple function called `create_data_frame()`:
 
 ```
 ## Creates a Pandas Data Frame 
@@ -623,7 +623,7 @@ Pandas is a Python Library that is used in data analysis. The library includes a
         # print(df)
         return(df)
 ```
-This function utilizes the platform data stored in `PLATFORM_DETAILS` to create columns of information, and uses the device names in `DEVICES` to index the columns. The data frame will end up looking similar to this:
+This function utilizes the platform data stored in `PLATFORM_DETAILS` to create columns of information, and uses the device names in `DEVICES` to index the columns. The data frame will end up looking similar to this (you can uncomment the the print statement to see your own):
 
 ```
                          OS Type          Version                           Model           Serial
@@ -643,10 +643,23 @@ We call this function from `main()` with this line of code:
     device_df = create_data_frame()
 ```
 
-This line creates a data frame called `device_df` by p
+This line creates a data frame called `device_df` by passing the `PLATFORM_DETAILS` dictionary as the data, and the `DEVICES` list as the index. The function returns the data frame to the calling function (in this case main().
+
+Go into the the main() function and uncomment the call to this function (i.e. make the function active).
+
+### STEP 2: Writing the inventory to an .xlsx file
+
+You may notice that the Pandas data frame has a structure similar to a spreadsheet. There are columns and rows with cells that contain data. Pandas provides us with a useful method of saving our data frame as a .xlsx file. All we need to do is perform the `to_excel()` function on the data frame, passing in the name of the file we wish to have the inventory saved in. See this line of code in `main()`:
+
+```
+    device_df.to_excel('./inventory.xlsx')
+```
 
 Go into the the main() function and uncomment the call to this functio (i.e. make the function active).
 
+You should see a new file **inventory.xlsx** appear in the working directory. You can open this file to view its contents by utilizing the file navigator on the desktop. 
+
+![text!](/images/inventory_xlsx.png)
 
 ## References
 
