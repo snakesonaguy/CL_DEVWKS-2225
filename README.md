@@ -106,7 +106,7 @@ When prompted to name the file enter **.env**. Once you have done this the blank
     NSO_PASSWORD=""
 ```
 
-Your facilitator will provide with you data to populate these variables. We will explore more about what this file does in the next section. 
+Your facilitator will provide with you data to populate these variables. We will explore more about what this file does in the next section. You can now save and close this file.
 
 ---
 
