@@ -210,7 +210,7 @@ So a simple function might looks something like this:
         return num * 2
 ```
 
-In the above function the argument `num` is passed to the function `double`. The function returns `num * 2`. You will notice that none of our functions take any arguments or return anything. This is because we are using global variables (we don't need to pass variables around since each function has direct access to them (global scope).
+In the above function the argument `num` is passed to the function `double`. The function returns `num * 2`. You will notice that none of our functions take any arguments and only one of them has a return value. This is because we are using global variables (we don't need to pass variables around since each function has direct access to them (global scope).
 
 The `if __name__ == '__main__':` statement basically allows our code to either be run as a standalone program or imported into a different program. This is a good practice. 
 
