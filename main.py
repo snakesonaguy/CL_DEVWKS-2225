@@ -35,7 +35,7 @@ def get_verify_restconf():
 ## Retrieves the device groups configured on NSO
 def get_device_groups():
     ## You will need to edit the following line to gather only the members of the ALL group
-    path = '{}/restconf/data/tailf-ncs:devices/device-group=ALL'.format(NSO_HOST)
+    path = '{}/restconf/data/tailf-ncs:devices/device-group'.format(NSO_HOST)
     req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
     if req.status_code == 200:
         data = (req.json())
@@ -68,11 +68,11 @@ def get_device_platform_details():
         path = '{}/restconf/data/tailf-ncs:devices/device={}/platform'.format(NSO_HOST, device)
         req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
         if req.status_code == 200:
-            info = req.json()
-            os.append(info['tailf-ncs:platform']['name'])
-            version.append(info['tailf-ncs:platform']['version'])
-            model.append(info['tailf-ncs:platform']['model'])
-            serial.append(info['tailf-ncs:platform']['serial-number'])
+            data = req.json()
+            os.append(data['tailf-ncs:platform']['name'])
+            version.append(data['tailf-ncs:platform']['version'])
+            model.append(data['tailf-ncs:platform']['model'])
+            serial.append(data['tailf-ncs:platform']['serial-number'])
         else:
             error = 'Error Code: {}'.format(req.status_code)
             os.append(error)
