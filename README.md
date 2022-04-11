@@ -63,6 +63,8 @@ Now that you are in the lab directory we can open our IDE (vscode). To do this i
 
 `code .`
 
+If you are prompted to trust the authors of the file click **Yes**.
+
 Note: `code` is the command to open vscode and `.` is a refrence to the present working directory. 
 
 vscode should open on your desktop and you should see a screen similar to this:
