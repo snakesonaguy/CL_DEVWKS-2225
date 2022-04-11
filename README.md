@@ -55,7 +55,7 @@ You can see the contents of the directory by issuing the `ls` command.
 
 ![text!](/images/ls.png)
 
-Note: there are some additional hidden files that we cannot see with `ls`.
+Note: there are some additional hidden files that we cannot see with `ls`. You can see the full directory contents with `ls -a`. 
 
 ### STEP 3: Launch vscode
 
