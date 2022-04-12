@@ -703,7 +703,7 @@ Another task that we could automate is gathering IP information from the devices
 
 First let's take a look at the **for** loop. We can see that we are iterating through the `DEVICES` list (remember this holds the name of each device onboarded to NSO). THe `index` variable is assigned to the return value of `DEVICES.index(device)`. For instance if core-rtr-01 is the third element in the `DEVICES` list than the `index` variable will be 2 (remember to start counting from 0). 
 
-We can now use this `index` to check the status of the router in our `PLATFORM_DETAILS` dictionary. Our **if** statement tests whether we have vaild information 
+We can now use this `index` to check the status of the router in our `PLATFORM_DETAILS` dictionary. Our **if** statement tests whether we have vaild information in the `PLATFORM_DETAILS['OS Type']` list. If the string **Error Code:** is NOT in the element then the information should be vaild.
 ## References
 
 NSO RESTConf API Reference
