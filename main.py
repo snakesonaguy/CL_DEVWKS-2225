@@ -1,7 +1,4 @@
 # Imported packages
-from audioop import add
-from operator import index
-from textwrap import indent
 import requests
 import urllib3
 import json
@@ -45,18 +42,18 @@ def get_device_groups():
         data = (req.json())
         print(json.dumps(data, indent=4))
 
-        # UNCOMMENT 1 START
-        groups = data['tailf-ncs:device-group']
-        for group in groups:
-            print('Group Name: {}'.format(group['name']))
-            print('\tMembers: ')
-            for member in group['member']:
-                print('\t\t{}'.format(member))
-        # UNCOMMENT 1 STOP
+        # # UNCOMMENT 1 START
+        # groups = data['tailf-ncs:device-group']
+        # for group in groups:
+        #     print('Group Name: {}'.format(group['name']))
+        #     print('\tMembers: ')
+        #     for member in group['member']:
+        #         print('\t\t{}'.format(member))
+        # # UNCOMMENT 1 STOP
 
-        # UNCOMMENT 2 START
-                DEVICES.append(member)
-        # UNCOMMENT 2 STOP
+        # # UNCOMMENT 2 START
+        #         DEVICES.append(member)
+        # # UNCOMMENT 2 STOP
 
     else:
         print('Error Code: {}'.format(req.status_code))
@@ -89,6 +86,7 @@ def get_device_platform_details():
     PLATFORM_DETAILS['Model'] = model 
     PLATFORM_DETAILS['Serial'] = serial
 
+## Retrieves interface information for devices in DEVICES
 def get_device_interfaces():
 
     os_mapping = {
@@ -113,6 +111,8 @@ def get_device_interfaces():
                 format_ip_info(data, ned_type, device)
             else:
                 print('Error Code: {}'.format(req.status_code))
+        else:
+            continue
 
 def format_ip_info(data, ned, device):
 

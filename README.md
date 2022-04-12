@@ -175,6 +175,7 @@ Next you will find an additional block of global variables.
     HEADERS = {'Content-type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
     DEVICES = []
     PLATFORM_DETAILS = {}
+    IP_DATA = []
 ```
 Here is what these variables are:
 
@@ -183,6 +184,7 @@ Here is what these variables are:
 - HEADERS - a Python dictionary that consists of 2 key value pairs
 - DEVICES - an empty Python list 
 - PLATFORM_DETAILS - an empty Python dictionary
+- IP_DATA - an empty Python list
 
 When we explore the functions within the code we will see how these are used.
 
@@ -550,7 +552,7 @@ As with our previous functions we want to account for errors where the API call 
 ```
 First we construct a string `error` which contains the `status_code`. We then append that string into the platform lists in place of the information that should have been received. It is important we do this because if we did not append anything our indexing would be thrown off. 
 
-### STEP 3: Constructing and returning the device_data dictionary
+### STEP 3: Populating the PLATFORM_DETAILS dictionary
 
 Once all of the platform lists are populated we can populate the global Python dictionary `PLATFORM_DETAILS` with the information we have gathered. We do this with the following lines of code:
 
@@ -619,13 +621,21 @@ Pandas is a Python Library that is used for data analysis. The library includes 
 
 ```
 ## Creates a Pandas Data Frame 
-    def create_data_frame():
-        df = pd.DataFrame(PLATFORM_DETAILS, index=DEVICES)
-        # Uncomment the line below if you want to see the formatting of the data frame.
-        # print(df)
-        return(df)
+def create_data_frame(data, index=None):
+    df = pd.DataFrame(data, index=index)
+    # Uncomment the line below if you want to see the formatting of the data frame.
+    # print(df)
+    return(df)
 ```
-This function utilizes the platform data stored in `PLATFORM_DETAILS` to create columns of information, and uses the device names in `DEVICES` to index the columns. The data frame will end up looking similar to this (you can uncomment the the print statement to see your own):
+This function expects at least one arguement `data` and an optional argument of `index`. `data` can be any form of structured data that Pandas can use to create a data frame (see more about Pandas in the references section), and `index` is how the rows are indexed in the data frame. 
+
+We call this function from `main()` with this line of code:
+
+```
+    device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
+```
+
+This line creates a data frame called `device_df` by calling `create_data_frame()`. The function returns the data frame to the calling function (in this case the main()). If we print our data frame this its structure will be similar to this:
 
 ```
                          OS Type          Version                           Model           Serial
@@ -638,14 +648,6 @@ dist-sw02                  NX-OS           9.2(3)  cisco Nexus9000 9000v Chassis
 edge-firewall01              asa          9.12(2)                            ASAv      9AECK15LSLF
 internet-rtr01            ios-xe         16.11.1b                        CSR1000V      929MFXYBMRP
 ```
-
-We call this function from `main()` with this line of code:
-
-```
-    device_df = create_data_frame()
-```
-
-This line creates a data frame called `device_df` by calling `create_data_frame()`. `create_data_frame()` returns the data frame to the calling function (in this case the main() function).
 
 Go into the the main() function and uncomment the call to this function (i.e. make the function active).
 
@@ -663,6 +665,45 @@ You should see a new file **inventory.xlsx** appear in the working directory. Yo
 
 ![text!](/images/inventory_xlsx.png)
 
+## TASK 9: Retrieving and saving IP information
+
+### STEP 1: Gathering device interface IP information
+
+Another task that we could automate is gathering IP information from the devices on our network. NSO should act as a single source of truth on your network, so this information is also stored in the configuration database (CDB). Lets take a look at the `get_device_interfaces()` function in **main.py**:
+
+```
+## Retrieves interface information for devices in DEVICES
+    def get_device_interfaces():
+
+        os_mapping = {
+            'ios-xe': 'ios',
+            'ios-xr': 'ios-xr',
+            'NX-OS': 'nx',
+            'asa': 'asa',
+        }
+
+        for device in DEVICES:
+            index = DEVICES.index(device)
+            if 'Error Code:' not in PLATFORM_DETAILS['OS Type'][index]:
+                os = (PLATFORM_DETAILS['OS Type'][index])
+                call_mapping = os_mapping[os]
+                ned_type = 'tailf-ned-cisco-{}:interface'.format(call_mapping)
+
+                path = '{}/restconf/data/tailf-ncs:devices/device={}/config/{}'.format(NSO_HOST, device, ned_type)
+                req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
+                
+                if req.status_code == 200:
+                    data = req.json()
+                    format_ip_info(data, ned_type, device)
+                else:
+                    print('Error Code: {}'.format(req.status_code))
+            else:
+                continue
+```
+
+First let's take a look at the **for** loop. We can see that we are iterating through the `DEVICES` list (remember this holds the name of each device onboarded to NSO). THe `index` variable is assigned to the return value of `DEVICES.index(device)`. For instance if core-rtr-01 is the third element in the `DEVICES` list than the `index` variable will be 2 (remember to start counting from 0). 
+
+We can now use this `index` to check the status of the router in our `PLATFORM_DETAILS` dictionary. Our **if** statement tests whether we have vaild information 
 ## References
 
 NSO RESTConf API Reference
