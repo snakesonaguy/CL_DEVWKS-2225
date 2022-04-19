@@ -1,4 +1,4 @@
-# Cisco Live! DevNet Workshop 1671 (DEVWKS-1671)
+# Cisco Live! DevNet Workshop 2225 (DEVWKS-2225)
 
 ## Scenario
 
@@ -35,9 +35,9 @@ We will be utilizing Git to clone the project repository onto our workstations. 
 
 In the terminal box enter the command: 
 
-`git clone https://github.com/snakesonaguy/CL_DEVWKS-1671`
+`git clone https://github.com/snakesonaguy/CL_DEVWKS-2225`
 
-You should now have **CL_DEVWKS-1671** directory on your desktop. 
+You should now have **CL_DEVWKS-2225** directory on your desktop. 
 
 ---
 
@@ -47,7 +47,7 @@ You should now have **CL_DEVWKS-1671** directory on your desktop.
 
 You can now move into the lab directory. From the open terminal type:
 
-`cd CL_DEVWKS-1671`
+`cd CL_DEVWKS-2225`
 
 ### STEP 2: View project directory contents
 
