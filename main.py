@@ -167,17 +167,17 @@ def create_data_frame(data, index=None):
 
 def main():
     pass
-    get_verify_restconf()
+    # get_verify_restconf()
     
-    get_device_groups()
+    # get_device_groups()
     
-    get_device_platform_details()
-    device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
-    device_df.to_excel('./inventory.xlsx')
+    # get_device_platform_details()
+    # device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
+    # device_df.to_excel('./inventory.xlsx')
 
-    get_device_interfaces()
-    ip_df = create_data_frame(IP_DATA)
-    ip_df.to_excel('./ips.xlsx', index=False)
+    # get_device_interfaces()
+    # ip_df = create_data_frame(IP_DATA)
+    # ip_df.to_excel('./ips.xlsx', index=False)
     
 
 
