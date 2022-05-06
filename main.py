@@ -43,16 +43,16 @@ def get_device_groups():
         print(json.dumps(data, indent=4))
 
         # # UNCOMMENT 1 START
-        # groups = data['tailf-ncs:device-group']
-        # for group in groups:
-        #     print('Group Name: {}'.format(group['name']))
-        #     print('\tMembers: ')
-        #     for member in group['member']:
-        #         print('\t\t{}'.format(member))
+        groups = data['tailf-ncs:device-group']
+        for group in groups:
+            print('Group Name: {}'.format(group['name']))
+            print('\tMembers: ')
+            for member in group['member']:
+                print('\t\t{}'.format(member))
         # # UNCOMMENT 1 STOP
 
         # # UNCOMMENT 2 START
-        #         DEVICES.append(member)
+                DEVICES.append(member)
         # # UNCOMMENT 2 STOP
 
     else:
@@ -121,9 +121,11 @@ def format_ip_info(data, ned, device):
         for interface in interfaces.items():
             ports = interface[1]
             for port in ports:
+                # print(ports)
                 port_type = interface[0]
                 port_number = port['name']
                 port_ip_status = port['ip']
+                # print(port_ip_status)
 
                 if 'address' in port_ip_status:
                     address = port_ip_status['address']['primary']['address']
@@ -152,11 +154,32 @@ def format_ip_info(data, ned, device):
             for port in ports:
                 port_type = interface[0]
                 port_number = port['name']
-                port_ip_status = port['ip']
-                if 'address' in port_ip_status:
-                    address = port_ip_status['address']['ip']['host-ip']
-                    ip_data = (device, '{}{}'.format(port_type, port_number), address)
-                    IP_DATA.append(ip_data)
+
+                if 'ip' in port:
+                    port_ip_status = port['ip']
+                    if 'address' in port_ip_status:
+                        address = port_ip_status['address']['ip']['host-ip']
+                        ip_data = (device, '{}{}'.format(port_type, port_number), address)
+                        IP_DATA.append(ip_data)
+
+    if ned == 'tailf-ned-cisco-ios-xr:interface':
+        interfaces = data[ned]
+        for interface in interfaces.items():
+            ports = interface[1]
+            # print(interface)
+            for port in ports:
+                port_type = interface[0]
+                port_number = port['id']
+
+                if 'ipv4' in port:
+                    port_ip_status = port['ipv4']
+                    if 'address' in port_ip_status:
+                        address = port_ip_status['address']['ip']
+                        # print(port_ip_status)
+                        # print(address)
+                        ip_data = (device, '{}{}'.format(port_type, port_number), address)
+                        # print(ip_data)
+                        IP_DATA.append(ip_data)
 
 ## Creates a Pandas Data Frame 
 def create_data_frame(data, index=None):
@@ -167,17 +190,17 @@ def create_data_frame(data, index=None):
 
 def main():
     pass
-    # get_verify_restconf()
+    get_verify_restconf()
     
-    # get_device_groups()
+    get_device_groups()
     
-    # get_device_platform_details()
-    # device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
-    # device_df.to_excel('./inventory.xlsx')
+    get_device_platform_details()
+    device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
+    device_df.to_excel('./inventory.xlsx')
 
-    # get_device_interfaces()
-    # ip_df = create_data_frame(IP_DATA)
-    # ip_df.to_excel('./ips.xlsx', index=False)
+    get_device_interfaces()
+    ip_df = create_data_frame(IP_DATA)
+    ip_df.to_excel('./ips.xlsx', index=False)
     
 
 
