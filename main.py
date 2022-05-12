@@ -43,16 +43,16 @@ def get_device_groups():
         print(json.dumps(data, indent=4))
 
         # # UNCOMMENT 1 START
-        # groups = data['tailf-ncs:device-group']
-        # for group in groups:
-        #     print('Group Name: {}'.format(group['name']))
-        #     print('\tMembers: ')
-        #     for member in group['member']:
-        #         print('\t\t{}'.format(member))
+        groups = data['tailf-ncs:device-group']
+        for group in groups:
+            print('Group Name: {}'.format(group['name']))
+            print('\tMembers: ')
+            for member in group['member']:
+                print('\t\t{}'.format(member))
         # # UNCOMMENT 1 STOP
 
         # # UNCOMMENT 2 START
-                # DEVICES.append(member)
+                DEVICES.append(member)
         # # UNCOMMENT 2 STOP
 
     else:
