@@ -36,24 +36,24 @@ def get_verify_restconf():
 ## Retrieves the device groups configured on NSO
 def get_device_groups():
     ## You will need to edit the following line to gather only the members of the ALL group
-    path = '{}/restconf/data/tailf-ncs:devices/device-group=ALL'.format(NSO_HOST)
+    path = '{}/restconf/data/tailf-ncs:devices/device-group'.format(NSO_HOST)
     req = requests.get(path, auth=AUTH, headers=HEADERS, verify=False)
     if req.status_code == 200:
         data = (req.json())
         print(json.dumps(data, indent=4))
 
-        # UNCOMMENT 1 START
-        groups = data['tailf-ncs:device-group']
-        for group in groups:
-            print('Group Name: {}'.format(group['name']))
-            print('\tMembers: ')
-            for member in group['member']:
-                print('\t\t{}'.format(member))
-        # UNCOMMENT 1 STOP
+        # # UNCOMMENT 1 START
+        # groups = data['tailf-ncs:device-group']
+        # for group in groups:
+        #     print('Group Name: {}'.format(group['name']))
+        #     print('\tMembers: ')
+        #     for member in group['member']:
+        #         print('\t\t{}'.format(member))
+        # # UNCOMMENT 1 STOP
 
-        # UNCOMMENT 2 START
-                DEVICES.append(member)
-        # UNCOMMENT 2 STOP
+        # # UNCOMMENT 2 START
+        #         DEVICES.append(member)
+        # # UNCOMMENT 2 STOP
     else:
         print('Error Code: {}'.format(req.status_code))
 
@@ -182,28 +182,20 @@ def format_ip_info(data, ned, device):
                         # print(ip_data)
                         IP_DATA.append(ip_data)
 
-## Creates a Pandas Data Frame 
-def create_data_frame(data, index=None):
-    df = pd.DataFrame(data, index=index)
-    # Uncomment the line below if you want to see the formatting of the data frame.
-    # print(df)
-    return(df)
 
 def main():
     pass
-    get_verify_restconf()
+    # get_verify_restconf()
     
-    get_device_groups()
+    # get_device_groups()
     
-    get_device_platform_details()
-    device_df = pd.DataFrame(PLATFORM_DETAILS, DEVICES)
-    # device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
-    device_df.to_excel('./inventory.xlsx')
+    # get_device_platform_details()
+    # device_df = pd.DataFrame(PLATFORM_DETAILS, DEVICES)
+    # device_df.to_excel('./inventory.xlsx')
 
-    get_device_interfaces()
-    ip_df = pd.DataFrame(IP_DATA, index=None)
-    # ip_df = create_data_frame(IP_DATA)
-    ip_df.to_excel('./ips.xlsx', index=False)
+    # get_device_interfaces()
+    # ip_df = pd.DataFrame(IP_DATA, index=None)
+    # ip_df.to_excel('./ips.xlsx', index=False)
     
 
 
