@@ -42,19 +42,18 @@ def get_device_groups():
         data = (req.json())
         print(json.dumps(data, indent=4))
 
-        # # UNCOMMENT 1 START
-        # groups = data['tailf-ncs:device-group']
-        # for group in groups:
-        #     print('Group Name: {}'.format(group['name']))
-        #     print('\tMembers: ')
-        #     for member in group['member']:
-        #         print('\t\t{}'.format(member))
-        # # UNCOMMENT 1 STOP
+        # UNCOMMENT 1 START
+        groups = data['tailf-ncs:device-group']
+        for group in groups:
+            print('Group Name: {}'.format(group['name']))
+            print('\tMembers: ')
+            for member in group['member']:
+                print('\t\t{}'.format(member))
+        # UNCOMMENT 1 STOP
 
-        # # UNCOMMENT 2 START
-                # DEVICES.append(member)
-        # # UNCOMMENT 2 STOP
-
+        # UNCOMMENT 2 START
+                DEVICES.append(member)
+        # UNCOMMENT 2 STOP
     else:
         print('Error Code: {}'.format(req.status_code))
 
@@ -85,6 +84,8 @@ def get_device_platform_details():
     PLATFORM_DETAILS['Version'] =  version 
     PLATFORM_DETAILS['Model'] = model 
     PLATFORM_DETAILS['Serial'] = serial
+
+    # print(PLATFORM_DETAILS)
 
 ## Retrieves interface information for devices in DEVICES
 def get_device_interfaces():
@@ -195,11 +196,13 @@ def main():
     get_device_groups()
     
     get_device_platform_details()
-    device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
+    device_df = pd.DataFrame(PLATFORM_DETAILS, DEVICES)
+    # device_df = create_data_frame(PLATFORM_DETAILS, DEVICES)
     device_df.to_excel('./inventory.xlsx')
 
     get_device_interfaces()
-    ip_df = create_data_frame(IP_DATA)
+    ip_df = pd.DataFrame(IP_DATA, index=None)
+    # ip_df = create_data_frame(IP_DATA)
     ip_df.to_excel('./ips.xlsx', index=False)
     
 
